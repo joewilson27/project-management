@@ -1,9 +1,11 @@
 package com.wilson.pma.entities;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+@Entity // an entity annotation is a mark that could tell the java that this class is an entity
 public class Project {
 	
 	@Id
