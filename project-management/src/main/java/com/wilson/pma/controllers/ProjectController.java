@@ -1,5 +1,6 @@
 package com.wilson.pma.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -7,11 +8,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.wilson.pma.dao.ProjectRepository;
 import com.wilson.pma.entities.Project;
 
 @Controller
 @RequestMapping("/projects")
 public class ProjectController {
+	
+	@Autowired // for auto create an instance interfaces this ProjectRepository
+	ProjectRepository proRep;
 	
 	//@RequestMapping("/new")
 	@GetMapping("/new") // other way for mapping method GET controller
@@ -28,6 +33,10 @@ public class ProjectController {
 	@PostMapping("/save") // other way for mapping method POST controller
 	public String createProject(Project project, Model model) {
 		// this should handle saving to the database...
+		proRep.save(project);
+		
+		// use a redirect to prevent duplicate submissions / utk menghindari double, triple and so on submit pada form 
+		return "redirect:/projects/new";
 	}
 
 }
