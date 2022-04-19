@@ -32,7 +32,7 @@ public class HomeController {
 		List<Employee> employees = empRepo.findAll();
 		model.addAttribute("employeesList", employees);
 		
-		return "home";
+		return "main/home";
 	}
 	
 }

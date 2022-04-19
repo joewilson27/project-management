@@ -26,7 +26,7 @@ public class ProjectController {
 		
 		model.addAttribute("project", aProject); // -> the first parameter "project" is the name that would be caught in html for form th:object="${project}"
 		
-		return "new-project"; // -> thymeleaf would find a page new-project.html in src/main/resources/templates
+		return "projects/new-project"; // -> thymeleaf would find a page new-project.html in src/main/resources/templates
 	}
 	
 	//@RequestMapping(value="/save", method=RequestMethod.POST)

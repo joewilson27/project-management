@@ -24,7 +24,7 @@ public class EmployeeController {
 		
 		model.addAttribute("employee", anEmployee); 
 		
-		return "new-employee"; 
+		return "employees/new-employee"; 
 	}
 	
 	@PostMapping("/save")
@@ -32,6 +32,7 @@ public class EmployeeController {
 		// save to the database using an employee crud repository
 		empRepo.save(employee);
 		
+		// this is an url redirect, not a template view
 		return "redirect:/employees/new";// best practice, if you save your data, better to redirect to prevent a double submissions (submit berkali-kali)
 	}
 	
