@@ -1,5 +1,7 @@
 package com.wilson.pma.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +18,15 @@ public class EmployeeController {
 	
 	@Autowired
 	EmployeeRepository empRepo;
+	
+	// @GetMapping tanpa param, maka method ini akan dipanggil ketika kita melakukan request localhost:8080/employees
+	// 'employees' dr request mapping Controller EmployeeController 
+	@GetMapping
+	public String displayEmployees(Model model) {
+		List<Employee> employees = empRepo.findAll();
+		model.addAttribute("employees", employees);
+		return "employees/list-employees";
+	}
 	
 	@GetMapping("/new")
 	public String displayEmployeeForm(Model model) {
