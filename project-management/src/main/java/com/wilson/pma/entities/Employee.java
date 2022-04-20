@@ -1,6 +1,8 @@
 package com.wilson.pma.entities;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,10 +22,11 @@ public class Employee {
 	
 	// this for mapped an employee to a project when we define mappedBy in Project
 	// Many employees could be assigned to one project
-	@ManyToOne
+	@ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST},
+			fetch = FetchType.LAZY)
 	@JoinColumn(name="project_id") // this would be a name for field on table Employee, when it runs, table employee can include a field for this project that called "project_id"
-	private Project theProject; // theProject harus sama seperti yg di set pada table yg ingin di join
-	// dalam case ini pada entity Project mappedBy="theProject"
+	private Project project; // theProject harus sama seperti yg di set pada table yg ingin di join
+	// dalam case ini pada entity Project mappedBy="project"
 	
 	public Employee() {
 		
@@ -34,6 +37,14 @@ public class Employee {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
+	}
+	
+	public Project getProject() {
+		return project;
+	}
+
+	public void setProject(Project project) {
+		this.project = project;
 	}
 	
 	public long getEmployeeId() {

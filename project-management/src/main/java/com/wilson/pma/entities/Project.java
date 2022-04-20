@@ -30,7 +30,7 @@ public class Project {
 	
 	// this would be create a field in Employee table, and put a field for catch this mapped in Employee
 	// entity
-	@OneToMany(mappedBy="theProject") // this means that kita harus define a field on Employees entity dgn nama theProject
+	@OneToMany(mappedBy="project") // this means that kita harus define a field on Employees entity dgn nama 'project'
 	private List<Employee> employees; // when it runs, table employee can include a field for project
 
 	public Project() {
@@ -42,6 +42,14 @@ public class Project {
 		this.name = name;
 		this.stage = stage;
 		this.description = description;
+	}
+	
+	public List<Employee> getEmployees() {
+		return employees;
+	}
+
+	public void setEmployees(List<Employee> employees) {
+		this.employees = employees;
 	}
 
 	public long getProjectId() {
