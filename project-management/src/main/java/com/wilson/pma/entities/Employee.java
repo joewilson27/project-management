@@ -4,6 +4,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Employee {
@@ -15,6 +17,13 @@ public class Employee {
 	private String firstName;
 	private String lastName;
 	private String email;
+	
+	// this for mapped an employee to a project when we define mappedBy in Project
+	// Many employees could be assigned to one project
+	@ManyToOne
+	@JoinColumn(name="project_id") // this would be a name for field on table Employee, when it runs, table employee can include a field for this project that called "project_id"
+	private Project theProject; // theProject harus sama seperti yg di set pada table yg ingin di join
+	// dalam case ini pada entity Project mappedBy="theProject"
 	
 	public Employee() {
 		

@@ -1,9 +1,12 @@
 package com.wilson.pma.entities;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 @Entity // an entity annotation is a mark that could tell the java that this class is an entity
 public class Project {
@@ -17,6 +20,18 @@ public class Project {
 	private String stage; // NOTSTARTED, COMPLETED, INPROGRESS
 	
 	private String description;
+	
+	// one (project) to (assign employee) many
+	// One project could be assigned to many employees
+	// when we run this project, this would be create a mapping table for binding project and employee
+	/*@OneToMany
+	private List<Employee> employees; 
+	*/
+	
+	// this would be create a field in Employee table, and put a field for catch this mapped in Employee
+	// entity
+	@OneToMany(mappedBy="theProject") // this means that kita harus define a field on Employees entity dgn nama theProject
+	private List<Employee> employees; // when it runs, table employee can include a field for project
 
 	public Project() {
 		
