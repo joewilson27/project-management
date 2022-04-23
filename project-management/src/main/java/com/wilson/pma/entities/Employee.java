@@ -1,5 +1,7 @@
 package com.wilson.pma.entities;
 
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -7,6 +9,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 @Entity
@@ -22,11 +26,22 @@ public class Employee {
 	
 	// this for mapped an employee to a project when we define mappedBy in Project
 	// Many employees could be assigned to one project
-	@ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST},
+	/*@ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST},
 			fetch = FetchType.LAZY)
 	@JoinColumn(name="project_id") // this would be a name for field on table Employee, when it runs, table employee can include a field for this project that called "project_id"
 	private Project project; // theProject harus sama seperti yg di set pada table yg ingin di join
 	// dalam case ini pada entity Project mappedBy="project"
+	*/
+	
+	// Many to many relationship, so one employee can holds many projects, satu employee dapat terasosiasi banyak project
+	// pada entity yang mau di mapping (in this case both of employee & project), would be assign this @JoinTable
+	// annotation. So it should be required this annotation to both entities 
+	@ManyToMany
+	@JoinTable(name="project_employee",
+	   joinColumns=@JoinColumn(name="employee_id"),
+	   inverseJoinColumns=@JoinColumn(name="project_id")
+	)
+	private List<Project> projects;
 	
 	public Employee() {
 		
@@ -39,39 +54,54 @@ public class Employee {
 		this.email = email;
 	}
 	
-	public Project getProject() {
-		return project;
+	// we no longer needs these setters and getters with type project, because now we are using
+	// List<Project>
+//	public Project getProject() {
+//		return project;
+//	}
+//
+//	public void setProject(Project project) {
+//		this.project = project;
+//	}
+	
+	public List<Project> getProjects() {
+		return projects;
 	}
 
-	public void setProject(Project project) {
-		this.project = project;
+	public void setProjects(List<Project> projects) {
+		this.projects = projects;
 	}
 	
 	public long getEmployeeId() {
 		return employeeId;
 	}
+	
 	public void setEmployeeId(long employeeId) {
 		this.employeeId = employeeId;
 	}
+	
 	public String getFirstName() {
 		return firstName;
 	}
+	
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
+	
 	public String getLastName() {
 		return lastName;
 	}
+	
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
+	
 	public String getEmail() {
 		return email;
 	}
+	
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
-	
 	
 }

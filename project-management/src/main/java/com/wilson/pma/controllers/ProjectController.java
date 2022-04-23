@@ -45,6 +45,7 @@ public class ProjectController {
 		return "projects/new-project"; // -> thymeleaf would find a page new-project.html in src/main/resources/templates
 	}
 	
+	/*// this for one to many relationship
 	//@RequestMapping(value="/save", method=RequestMethod.POST)
 	@PostMapping("/save") // other way for mapping method POST controller
 	public String createProject(Project project, @RequestParam List<Long> employees, Model model) { // employees pada param harus sama dgn th:field pada form create project
@@ -65,5 +66,18 @@ public class ProjectController {
 		// use a redirect to prevent duplicate submissions / utk menghindari double, triple and so on submit pada form 
 		return "redirect:/projects/new";
 	}
-
+	*/
+	
+	// this for many to many relationship
+	@RequestMapping(value="/save", method=RequestMethod.POST)
+	@PostMapping("/save")
+	public String createProject(Project project, Model model) {
+		
+		proRep.save(project);
+		
+		// di sini kita tidak perlu lg mengasosiasikan relasi data dr data employee yg kita select dr
+		// form create projects, karena sudah di handle Spring
+		
+		return "redirect:/projects";
+	}
 }
