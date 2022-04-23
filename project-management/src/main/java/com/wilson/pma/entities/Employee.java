@@ -36,7 +36,8 @@ public class Employee {
 	// Many to many relationship, so one employee can holds many projects, satu employee dapat terasosiasi banyak project
 	// pada entity yang mau di mapping (in this case both of employee & project), would be assign this @JoinTable
 	// annotation. So it should be required this annotation to both entities 
-	@ManyToMany
+	@ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST},
+			fetch = FetchType.LAZY)
 	@JoinTable(name="project_employee",
 	   joinColumns=@JoinColumn(name="employee_id"),
 	   inverseJoinColumns=@JoinColumn(name="project_id")
