@@ -18,7 +18,7 @@ import javax.persistence.JoinColumn;
 public class Project {
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO) // for auto generate an unique ID
+	@GeneratedValue(strategy=GenerationType.IDENTITY) // for auto generate an unique ID
 	private long projectId;
 	
 	private String name;

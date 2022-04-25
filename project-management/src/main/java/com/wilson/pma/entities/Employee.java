@@ -17,7 +17,8 @@ import javax.persistence.ManyToOne;
 public class Employee {
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	//@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY) // akan membuat data id baru meski data yg existing tidak di buat menggunakan entity ini, misalnya dr data .sql
 	private long employeeId;
 	
 	private String firstName;
