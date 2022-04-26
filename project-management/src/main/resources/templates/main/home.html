@@ -35,6 +35,10 @@ samplenya berupa nav, maka disini kita bikin nav juga -->
 	
 		<div class="col-md-4">
 			<canvas id="myPieChart" height="50" width="50"></canvas>
+			
+			<script>
+				var chartDataX = "[[${projectStatusCnt}]]";
+			</script>
 		</div>
 	</div>
 </div>
@@ -48,13 +52,13 @@ samplenya berupa nav, maka disini kita bikin nav juga -->
 					<tr>
 						<th> First Name </th>
 						<th> Last Name </th>
-						<th> Email Address</th>
+						<th> Project Count </th>
 					</tr>
 				</thead>
-					<tr th:each="anEmployee : ${employeesList}">
-						<td th:text="${anEmployee.firstName}"/>
-						<td th:text="${anEmployee.lastName}"/>
-						<td th:text="${anEmployee.email}"/>
+					<tr th:each="anEmployeeProjectCnt : ${employeesListProjectsCnt}">
+						<td th:text="${anEmployeeProjectCnt.firstName}"/>
+						<td th:text="${anEmployeeProjectCnt.lastName}"/>
+						<td th:text="${anEmployeeProjectCnt.projectCount}"/>
 					</tr>
 				<tbody>
 				</tbody>
