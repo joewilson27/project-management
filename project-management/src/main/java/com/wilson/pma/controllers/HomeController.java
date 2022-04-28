@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,9 +17,21 @@ import com.wilson.pma.dao.ProjectRepository;
 import com.wilson.pma.dto.EmployeeProject;
 import com.wilson.pma.dto.ChartData;
 import com.wilson.pma.entities.Project;
+import com.wilson.pma.springExample.Car;
 
 @Controller
 public class HomeController {
+	
+	/*
+	 * kita mencoba meng-inject objek Car dengan Autowired
+	 * */
+	@Autowired
+	Car car; 
+	// didnt work --> Field car in com.wilson.pma.controllers.HomeController required a bean of type 'com.joe.pma.springExample.Car' that could not be found.
+	// --> Consider defining a bean of type 'com.joe.pma.springExample.Car' in your configuration.
+	// jadi coba kita menggunakan annotation @Bean pada ProjectManagementApplication utk object Car ini
+	// agar inject @Autowired berjalan pada object Car yg kita buat secara manual dengan @Bean di ProjectManagementApplication
+	// So, spring framework is responsible for injecting our dependencies that is what is called dependency
 	
 	@Autowired
 	ProjectRepository proRepo;

@@ -12,6 +12,10 @@ import com.wilson.pma.dao.EmployeeRepository;
 import com.wilson.pma.dao.ProjectRepository;
 import com.wilson.pma.entities.Employee;
 import com.wilson.pma.entities.Project;
+import com.wilson.pma.springExample.Car;
+import com.wilson.pma.springExample.Doors;
+import com.wilson.pma.springExample.Engine;
+import com.wilson.pma.springExample.Tires;
 
 @SpringBootApplication
 public class ProjectManagementApplication {
@@ -25,6 +29,20 @@ public class ProjectManagementApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ProjectManagementApplication.class, args);
 	}
+	
+	// dengan annotataion @Bean ini kita meng-inject object Car dengan annotation @Autowired
+	// pada class yg ingin menginject. pada contoh ini kita mencoba di HomeController.
+	// selain membuat @Bean di sini utk menginject class Car, kita juga dapat membuatnya di class configure,
+	// pada sample disini kita akan membuatnya pada class ManufactureConfig di com.joe.pma.springExample
+	// sangat di sarankan utk membuat class configuration tersendiri dan terpisan dari main class seperti disini
+	/*@Bean
+	public Car newCar() {
+		Engine e = new Engine();
+		Doors d = new Doors();
+		Tires t = new Tires();
+		
+		return new Car(e, d, t);
+	}*/
 	
 	// manual seed data into table
 //	@Bean
