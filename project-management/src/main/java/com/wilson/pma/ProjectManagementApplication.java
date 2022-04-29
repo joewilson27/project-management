@@ -17,7 +17,7 @@ import com.wilson.pma.springExample.Doors;
 import com.wilson.pma.springExample.Engine;
 import com.wilson.pma.springExample.Tires;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages= {"com.wilson.pma","com.wilson.utils"}) // meski kita ingin annotation yg di com.wilson.utils ter-scan, namun kita harus juga mencantumkan package utama kita
 public class ProjectManagementApplication {
 	
 	@Autowired
