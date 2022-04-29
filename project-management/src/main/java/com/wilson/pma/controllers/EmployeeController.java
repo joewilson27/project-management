@@ -16,8 +16,20 @@ import com.wilson.pma.entities.Employee;
 @RequestMapping("/employees")
 public class EmployeeController {
 	
-	@Autowired
+	@Autowired // remove this Autowired for test
 	EmployeeRepository empRepo;
+	
+	// constructor injection (video 33), we dont need an annotation injection
+	/*public EmployeeController(EmployeeRepository empRepo) {
+		this.empRepo = empRepo;
+	}*/
+	
+	
+	// Setter Injection
+	/*@Autowired
+	public void setEmpRepo(EmployeeRepository empRepo) {
+		this.empRepo = empRepo;
+	}*/
 	
 	// @GetMapping tanpa param, maka method ini akan dipanggil ketika kita melakukan request localhost:8080/employees
 	// 'employees' dr request mapping Controller EmployeeController 
