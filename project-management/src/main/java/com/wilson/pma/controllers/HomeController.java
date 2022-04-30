@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +22,10 @@ import com.wilson.pma.springExample.Car;
 
 @Controller
 public class HomeController {
+	
+	@Value("${version}") // value ini kita get dr key yg ada di application.properties, dan kita akan menyimpannya dlm sebuah variable di bawah
+	private String ver;
+	
 	
 	/*
 	 * kita mencoba meng-inject objek Car dengan Autowired
@@ -41,6 +46,8 @@ public class HomeController {
 	
 	@GetMapping("/")
 	public String displayHome(Model model) throws JsonProcessingException {
+		
+		model.addAttribute("versionNumber", ver); // kita akan menampilkan version yg kita define di application.properties ke halaman home 
 		
 		Map<String, Object> map = new HashMap<>();
 		
