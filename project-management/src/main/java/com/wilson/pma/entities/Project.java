@@ -12,13 +12,16 @@ import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.JoinColumn;
 
 @Entity // an entity annotation is a mark that could tell the java that this class is an entity
 public class Project {
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY) // for auto generate an unique ID
+	//@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="project_seq")   // @GeneratedValue(strategy=GenerationType.IDENTITY) // for auto generate an unique ID
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "project_generator")
+	@SequenceGenerator(name = "project_generator", sequenceName = "project_seq", allocationSize = 1) // got error before this, so I added this @SequenceGenerator
 	private long projectId;
 	
 	private String name;

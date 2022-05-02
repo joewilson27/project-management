@@ -12,13 +12,16 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 
 @Entity
 public class Employee {
 	
 	@Id
 	//@GeneratedValue(strategy=GenerationType.AUTO)
-	@GeneratedValue(strategy=GenerationType.IDENTITY) // akan membuat data id baru meski data yg existing tidak di buat menggunakan entity ini, misalnya dr data .sql
+	//@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="employee_seq")  //@GeneratedValue(strategy=GenerationType.IDENTITY) // akan membuat data id baru meski data yg existing tidak di buat menggunakan entity ini, misalnya dr data .sql
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "employee_generator")
+	@SequenceGenerator(name = "employee_generator", sequenceName = "employee_seq", allocationSize = 1) // got error before this, so I added this @SequenceGenerator
 	private long employeeId;
 	
 	private String firstName;
