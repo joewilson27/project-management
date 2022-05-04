@@ -1,12 +1,13 @@
-package com.wilson.dao;
+package com.wilson.pma.dao;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.jupiter.api.Test; // JUnit 5
-//import org.junit.Test; // JUnit 4
+//import org.junit.jupiter.api.Test; // JUnit 5
+import org.junit.Test; // JUnit 4
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
@@ -29,9 +30,10 @@ import com.wilson.pma.entities.Project;
  * */
 
 // kita ingin agar ketika integration test mode ini di jalankan, ia akan me-load class utama "ProjectManagementApplication"
-@ContextConfiguration(classes=ProjectManagementApplication.class)
+//@ContextConfiguration(classes=ProjectManagementApplication.class)
+@SpringBootTest // dengan ini, kita cukup menyamakan package name dgn class main utama
 @RunWith(SpringRunner.class)
-@DataJpaTest // it is used for, if you have a temporary database that you want to write test case
+//@DataJpaTest // it is used for, if you have a temporary database that you want to write test case
 @SqlGroup({@Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts={"classpath:schema.sql", "classpath:data.sql"}),
 			@Sql(executionPhase = ExecutionPhase.AFTER_TEST_METHOD, scripts="classpath:drop.sql")})
 public class ProjectRepositoryIntegrationTest {
