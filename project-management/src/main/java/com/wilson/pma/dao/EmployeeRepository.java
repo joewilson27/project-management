@@ -18,4 +18,8 @@ public interface EmployeeRepository extends CrudRepository<Employee, Long> { // 
 			+ "GROUP BY e.first_name, e.last_name ORDER BY 3 DESC")
 	public List<EmployeeProject> employeeProjects();
 	
+	public Employee findByEmail(String value);
+	
+	public Employee findByEmployeeId(long theId);
+	
 }

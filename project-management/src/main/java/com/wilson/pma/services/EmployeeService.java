@@ -1,10 +1,14 @@
 package com.wilson.pma.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.wilson.pma.dao.EmployeeRepository;
+import com.wilson.pma.dto.EmployeeProject;
+import com.wilson.pma.entities.Employee;
 
 @Service // jika kita me-remove @Service, maka spring tidak akan tahu bahwa class ini minta di inject
 public class EmployeeService {
@@ -27,22 +31,52 @@ public class EmployeeService {
 	}*/
 	
 	// what happen when you have multiple beanz trying to compete for the same injection? 
-	IStaffRepository empRepo;
+	/*IStaffRepository empRepo;
 	
 	public EmployeeService(@Qualifier("staffRepositoryImpl1") IStaffRepository empRepo) { // REMEMBER, lower firstletter for @Qualifier
 		super();
 		this.empRepo = empRepo;
-		/*
-		 * Jadi, jika kita contoh debug pada baris sini, dan kita tidak membuat class/interface annotation utk di inject ke spring context, maka waktu component scanning dia akan mengeluarkan error:
-		 * Parameter 0 of constructor in com.wilson.pma.services.EmployeeService required a bean of type 'com.wilson.pma.services.IStaffRepository' that could not be found.
-		 * 
-		 * Action:
-		 * Consider defining a bean of type 'com.wilson.pma.services.IStaffRepository' in your configuration.
-		 * 
-		 * 
-		 * Lalu, ketika sebuah repo yg di implement ke multiple class, ketika component scanning, class mana yg akan di jadikan acuan?
-		 * 
-		 * */
+		
+		 //Jadi, jika kita contoh debug pada baris sini, dan kita tidak membuat class/interface annotation utk di inject ke spring context, maka waktu component scanning dia akan mengeluarkan error:
+		 //Parameter 0 of constructor in com.wilson.pma.services.EmployeeService required a bean of type 'com.wilson.pma.services.IStaffRepository' that could not be found.
+		
+		 //Action:
+		 //Consider defining a bean of type 'com.wilson.pma.services.IStaffRepository' in your configuration.
+
+		 //Lalu, ketika sebuah repo yg di implement ke multiple class, ketika component scanning, class mana yg akan di jadikan acuan?
+		
+	}*/
+	
+	
+	// sec 11 vid 47
+	@Autowired
+	EmployeeRepository empRepo;
+	
+	
+	public Employee save(Employee employee) {
+		return empRepo.save(employee);
+	}
+
+
+	public Iterable<Employee> getAll() {
+		return empRepo.findAll();
+	}
+
+
+	public List<EmployeeProject> employeeProjects() {
+		return empRepo.employeeProjects();
+	}
+
+
+	public Employee findByEmployeeId(long theId) {
+		// TODO Auto-generated method stub
+		return empRepo.findByEmployeeId(theId);
+	}
+
+
+	public void delete(Employee theEmp) {
+		empRepo.delete(theEmp);
+		
 	}
 	
 }

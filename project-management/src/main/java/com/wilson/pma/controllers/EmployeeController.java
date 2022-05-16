@@ -8,16 +8,18 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.wilson.pma.dao.EmployeeRepository;
 import com.wilson.pma.entities.Employee;
+import com.wilson.pma.services.EmployeeService;
 
 @Controller
 @RequestMapping("/employees")
 public class EmployeeController {
 	
 	@Autowired // remove this Autowired for test
-	EmployeeRepository empRepo;
+	EmployeeService empService; //EmployeeRepository empRepo;
 	
 	// constructor injection (video 33), we dont need an annotation injection
 	/*public EmployeeController(EmployeeRepository empRepo) {
@@ -35,7 +37,7 @@ public class EmployeeController {
 	// 'employees' dr request mapping Controller EmployeeController 
 	@GetMapping
 	public String displayEmployees(Model model) {
-		List<Employee> employees = empRepo.findAll();
+		Iterable<Employee> employees = empService.getAll();
 		model.addAttribute("employees", employees);
 		return "employees/list-employees";
 	}
@@ -53,10 +55,28 @@ public class EmployeeController {
 	@PostMapping("/save")
 	public String createEmployee(Model model, Employee employee) {
 		// save to the database using an employee crud repository
-		empRepo.save(employee);
+		empService.save(employee);
 		
 		// this is an url redirect, not a template view
 		return "redirect:/employees/new";// best practice, if you save your data, better to redirect to prevent a double submissions (submit berkali-kali)
+	}
+	
+	@GetMapping("/update")
+	public String displayEmployeeUpdateForm(@RequestParam("id") long theId, Model model) {
+		
+		Employee theEmp = empService.findByEmployeeId(theId);
+		
+		model.addAttribute("employee", theEmp);
+		
+		
+		return "employees/new-employee";
+	}
+	
+	@GetMapping("delete")
+	public String deleteEmployee(@RequestParam("id") long theId, Model model) {
+		Employee theEmp = empService.findByEmployeeId(theId);
+		empService.delete(theEmp);
+		return "redirect:/employees";
 	}
 	
 	

@@ -11,24 +11,29 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wilson.pma.dao.EmployeeRepository;
 import com.wilson.pma.dao.ProjectRepository;
+import com.wilson.pma.dto.TimeChartData;
 import com.wilson.pma.entities.Employee;
 import com.wilson.pma.entities.Project;
+import com.wilson.pma.services.EmployeeService;
+import com.wilson.pma.services.ProjectService;
 
 @Controller
 @RequestMapping("/projects")
 public class ProjectController {
 	
 	@Autowired // for auto create an instance interfaces this ProjectRepository
-	ProjectRepository proRep;
+	ProjectService proService; //ProjectRepository proRep;
 	
 	@Autowired
-	EmployeeRepository empRepo;
+	EmployeeService empService; // EmployeeRepository empRepo;
 	
 	@GetMapping
 	public String displayProjects(Model model) {
-		List<Project> projects = proRep.findAll();
+		List<Project> projects = proService.getAll();
 		model.addAttribute("projects", projects);
 		return "projects/list-projects";
 	}
@@ -38,7 +43,7 @@ public class ProjectController {
 	public String displayProjectForm(Model model) {
 		
 		Project aProject = new Project(); // objek empty ini akan di isi di form later dlm form new-project.html, so dr form akan mengirimkan sebuah objek Project yg sudah ter-fill
-		List<Employee> employees = empRepo.findAll();
+		Iterable<Employee> employees = empService.getAll();
 		model.addAttribute("project", aProject); // -> the first parameter "project" is the name that would be caught in html for form th:object="${project}"
 		model.addAttribute("allEmployees", employees);
 		
@@ -69,15 +74,31 @@ public class ProjectController {
 	*/
 	
 	// this for many to many relationship
-	@RequestMapping(value="/save", method=RequestMethod.POST)
+	//@RequestMapping(value="/save", method=RequestMethod.POST)
 	@PostMapping("/save")
 	public String createProject(Project project, Model model) {
 		
-		proRep.save(project);
+		proService.save(project);
 		
 		// di sini kita tidak perlu lg mengasosiasikan relasi data dr data employee yg kita select dr
 		// form create projects, karena sudah di handle Spring
 		
 		return "redirect:/projects";
+	}
+	
+	@GetMapping("/timelines")
+	public String displayProjectTimelines(Model model) throws JsonProcessingException {
+		
+		List<TimeChartData> timelineData = proService.getTimeData();
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		String jsonTimelineString = objectMapper.writeValueAsString(timelineData);
+
+		System.out.println("---------- project timelines ----------");
+		System.out.println(jsonTimelineString);
+		
+		model.addAttribute("projectTimeList", jsonTimelineString);
+		
+		return "projects/project-timelines";
 	}
 }
