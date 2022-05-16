@@ -2,12 +2,16 @@ package com.wilson.pma.dao;
 
 import java.util.List;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 import com.wilson.pma.dto.EmployeeProject;
 import com.wilson.pma.entities.Employee;
 
+//@Repository
+//@Profile("prod") // interface ini akan run on profile prod
 public interface EmployeeRepository extends CrudRepository<Employee, Long> { // Long is data type of primary key entity Employee
 	
 	@Override

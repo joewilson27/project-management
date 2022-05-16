@@ -6,18 +6,17 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wilson.pma.dao.EmployeeRepository;
-import com.wilson.pma.dao.ProjectRepository;
 import com.wilson.pma.dto.EmployeeProject;
 import com.wilson.pma.dto.ChartData;
 import com.wilson.pma.entities.Project;
+import com.wilson.pma.services.EmployeeService;
+import com.wilson.pma.services.ProjectService;
 import com.wilson.pma.springExample.Car;
 
 @Controller
@@ -39,10 +38,10 @@ public class HomeController {
 	// So, spring framework is responsible for injecting our dependencies that is what is called dependency
 	
 	@Autowired
-	ProjectRepository proRepo;
+	ProjectService proService; // ProjectRepository proRepo;
 	
 	@Autowired
-	EmployeeRepository empRepo;
+	EmployeeService empService; //EmployeeRepository empRepo;
 	
 	@GetMapping("/")
 	public String displayHome(Model model) throws JsonProcessingException {
@@ -52,10 +51,10 @@ public class HomeController {
 		Map<String, Object> map = new HashMap<>();
 		
 		// we are querying the database for projects
-		List<Project> projects = proRepo.findAll();
+		List<Project> projects = proService.getAll();
 		model.addAttribute("projectsList", projects);
 		
-		List<ChartData> projectData = proRepo.getProjectStatus();
+		List<ChartData> projectData = proService.getProjectStatus();
 		// Lets convert projectData object into a json structure for use in javascript
 		ObjectMapper objectMapper = new ObjectMapper();
 		String jsonString = objectMapper.writeValueAsString(projectData);
@@ -63,7 +62,7 @@ public class HomeController {
 		model.addAttribute("projectStatusCnt", jsonString);
 		
 		// we are querying the database for employees
-		List<EmployeeProject> employeesProjectCnt = empRepo.employeeProjects(); //List<Employee> employees = empRepo.findAll();
+		List<EmployeeProject> employeesProjectCnt = empService.employeeProjects(); //List<Employee> employees = empRepo.findAll();
 		model.addAttribute("employeesListProjectsCnt", employeesProjectCnt); // nanti di view, jangan lupa property nya sama dgn yg di define di interface EmployeeProject
 		
 		return "main/home";
