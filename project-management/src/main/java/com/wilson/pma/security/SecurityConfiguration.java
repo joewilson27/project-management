@@ -3,6 +3,7 @@ package com.wilson.pma.security;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
@@ -24,7 +25,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.and() // with this, we can add multiple user, so in this case you can login with myuser and joe
 				.withUser("joe")
 					.password("pass2")
-					.roles("USER");
+					.roles("USER")
+				.and()
+				.withUser("manageUser")
+					.password("pass3")
+					.roles("ADMIN");
 		
 	}
 	
@@ -35,6 +40,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		// istilahnya meng-inject
 	}
 	
-	
+	// this method will give the authorization to take activity over our websites,
+	// only an authorized user can do the task
+	@Override
+	protected void configure(HttpSecurity http) throws Exception{
+		http.authorizeHttpRequests()
+			.antMatchers("/projects/new").hasRole("ADMIN") // only user that has role ADMIN could create project
+			.antMatchers("/employees/new").hasRole("ADMIN")
+			.antMatchers("/").authenticated().and().formLogin(); // all users can access to the endpoint "/" if they're authenticated
+		// ketika user yg tidak mempunyai ROLE ADMIN mencoba akses ke endpoint "/project/new"
+		// maka aplikasi akan menolak
+	}
 	
 }
