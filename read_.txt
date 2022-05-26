@@ -1,0 +1,537 @@
+========================================================================
+Learn Spring 5, Boot 2, JPA, Thymeleaf, AOP, Web MVC, REST
+Current:
+Section = 12
+Video   = 54
+Time    = 
+
+Section 1 
+https://github.com/imtiazahmad007/spring-framework-course
+
+
+Section 1 vid 4
+- saat buat project, pilih java 17
+- Cara agar tdk usah stop/run project spring ketika kita melakukan perubahan (mirip npm run watch), kita tambahkan DevTools. Yaitu dgn cara klik kanan di file pom.xlm -> Spring -> Edit Starters.
+Ketika keluar menu New Spring Starter Project Dependencies (yg dimana sebelumnya kita pilih web), cari DevTools dan click
+
+
+@RequestMapping("/greeting") --> controller
+@RequestMapping(value = "/basic", method = RequestMethod.GET) --> method
+panggil di url localhost:8080/greeting/basic
+
+@RequestMapping("/greeting") --> controller
+@RequestMapping(value = "/", method = RequestMethod.GET) --> method
+panggil di url localhost:8080/greeting/ (tutup slash /)
+
+@RequestMapping("/greeting") --> controller
+@RequestMapping(value = "", method = RequestMethod.GET) --> method
+panggil di url localhost:8080/greeting 
+
+
+Section 1 vid 9
+Jadi, class HelloController pada package com.joe.demo.web sebenarnya adl
+child dr DemoApplication.java yg ada di directory atasny(com.joe.demo), maka semua class yg ada di bawah com.joe.demo akan di jalankan oleh main class nya yaitu DemoApplication.java.
+
+
+Section 1 vid 11
+add Thymeleaf for view. you can add them with right click on pom.xml -> Spring -> added Starters / edit starters.
+after added, check your pom.xml file
+* add Thymeleaf from Eclipse Market because on STS4 the web option is not appear on Select Wizard (source: https://stackoverflow.com/questions/66775096/html-file-not-showing-in-select-wizard-in-spring-tool-suite)
+
+spring.thymeleaf.cache=false on application.properties in src/main/resources/templates
+set to true in production agar ter-cache
+
+pada form method index, object model yg kita defined pada 
+th:object="${formData}" harus diikuti oleh input pada form tersebut
+th:field="${formData.fullName}", fullName harus sama dgn property pada object yg digunakan
+
+@RequestParam bisa digunakan utk nangkep querystring (sec1 vid9 09:37) juga pada form dgn class @RestController (sec1 vid7 14:10)
+
+
+
+Section 2 video 13
+starter project -> web, h2, jpa (hybernet, spring that used interacts with data. better than jdbc), thymeleaf (build html pages), DevTools 
+
+
+Section 2 video 14
+Turn a class into an entity.
+@GeneratedValue for auto generate an unique ID
+
+
+
+Section 2 video 14
+@Entity this annotation is mark for a model class
+
+these two annotations: 
+@RequestMapping("/new")
+@RequestMapping(value="/save", method=RequestMethod.POST)
+could replace the specific mapping:
+@GetMapping("/new")
+@PostMapping("/save")
+
+
+Section 2 vid 16
+on application.properties in src/main/resources:
+spring.h2.console.enabled=true
+spring.h2.console.path=/h2-console --> it will take us to the database screen.
+spring.jpa.show-sql=true --> jpa takes care of creating in the background by different entities in the database, pd contoh ini akan create project table in the database
+spring.thymeleaf.cache=false --> in development, set to false so our project don't cache the browser. In productions should set true
+
+spring.h2.console.enabled, spring.h2.console.path, spring.jpa.show-sql --> ketiga ini berhubungan dgn database
+
+// use a redirect to prevent duplicate submissions / utk menghindari double, triple and so on submit pada form 
+
+open this url below
+http://localhost:8080/h2-console/
+JDBC URL: jdbc:h2:mem:testdb --> default when you test database
+
+add this line to application.properties to set the source for database:
+spring.datasource.url=jdbc:h2:mem:testdb
+(Prior to Spring Boot 2.3.0-RELEASE this was the default, https://stackoverflow.com/questions/61865206/springboot-2-3-0-while-connecting-to-h2-database)
+
+Section 2 vid 19
+use a double quoted for th:replace, like th:replace="Layouts::header"
+
+Section 2 vid 20
+use a double quoted for th:replace, like th:replace="Layouts::header"
+
+Section 3 vid 22
+@ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST},
+			fetch = FetchType.LAZY)
+
+- property cascade is used for reflected the data parent if the data parent is modified, so its reflect to this data.
+For example, if the data project (parent data for this example) is deleted, it would delete the data employee that assigned to its projects (if we use CascadeType.REMOVE)
+
+- FetchType utk mengatur bagaimana data itu akan di load. Jika kita menggunakan FetchType.LAZY, maka ketika kita load table projects, dia hanya akan me-load table projects saja, namun jika di set FetchType.EAGER maka ketika kita load table projects maka ia juga akan me-load table child nya (dlm case ini table employee)
+
+th:field="${projects.employees}" sama dengan th:field="*{employees}"
+
+
+
+Section 3 vid 22
+@ManyToMany relationship, we have to define an annotation to an entity
+to tell Spring which field that would gonna be the foreign key to a mapping table. Jadi nanti akan ada table mapping yg tercreate utk menghubungkan 2 entitas
+
+Section 4 vid 24
+How to keep the data not lose after changed something in the code during the development
+- open the main file ProjectManagementApplication.java at src/main/java,
+
+
+Section 4 vid 25
+Seeding the database using SQL files
+- add file .sql into src/main/resources 
+
+when running the application, the step of drop and created table are being carried out by the hibernate. Hibernate is an implementation of JPA
+
+*note: if these error appear 
+"org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'scriptDataSourceInitializer' defined in class path resources"
+You have to set to tell Spring Boot that first the Hibernate DDL generation is done and then the execute the SQL files.
+
+add this code to application.properties:
+spring.jpa.defer-datasource-initialization=true
+(
+https://stackoverflow.com/questions/68711396/org-springframework-beans-factory-beancreationexception-error-creating-bean-wit
+)
+
+jadi kesimpulannya, JPA akan membuat table data secara otomatis berdasarkan class entity yg ada. Namun, bagaimana jika kita ingin agar JPA tdk membuat table berdasarkan class entity kita?
+Caranyadgn membuat schema.sql file yg bisa kita simpan pada src/main/resources 
+
+on application.properties, put this code to turn off the ddl creation automatically from the entity, so jika pada class entity kita memiliki 
+field yg terasosiasi dgn table lain, maka ia tidak akan di jalankan. Pada contoh disini kita akan menggunakan schema.sql utk kontrol penuh struktur pada database
+spring.jpa.hibernate.ddl-auto=none
+
+
+insert data via data.sql vs ProjectManagementApplication.java
+ketika kita membuat data dr data.sql, lalu kita buat data manual melalui web, maka akan kena error duplicate primary key, itu karena ketika kita membuat data via web, dia secara otomatis akan memasukkan primary key 1 dan dia seolah-olah tidak peduli dgn data yg telah kita buat via data.sql sebelumnya.
+Nah, jika kita membuat seeder data lewat ProjectManagementApplication.java, maka bugs ini tidak akan terjadi. jadi ketika kita membuat data manual via web, primary key yg akan di masukkan akan melanjutkan dr data yg existing. Ini terjadi karena ketika kita men-seeder data dr ProjectManagementApplication.java dia akan membuat data berdasarkan class entity, dimana entity masing2 telah memiliki annotation @GeneratedValue(strategy=GenerationType.AUTO), maka data yg akan di input selanjutnya dr web tidak akan membuat primary key dr awal. Lalu, jika kita tetap ingin membuat data via data.sql dan tetap normal jika lanjut menambahkan data via web, maka kita ganti annotation di entity menjadi @GeneratedValue(strategy=GenerationType.IDENTITY)
+
+Section 5 vid 26
+add href to the css file to html
+th:href="@{/css/formatting.css}" --> akan mencari folder css di dalam folder src/main/resources/static
+
+
+Section 5 vid 30
+REMEMBER THIS
+How to call model in script javascript in view
+var chartData = "[[${projectStatusCnt}]]";
+
+
+Section 6 vid 31
+The spring framework has something called the spring context. It's something when that's when your spring application starts, something called the spring context is started as well. And that spring context basically is a place where all of the objects that are needed in your application are loaded into. It's loaded into the spring contexts.
+Think of it as a memory area. And so all of these objects are created in that context.
+
+Kita dapat mendefine method yg ingin kita inject dengan @Bean di ProjectManagementApplication.java lalu nantinya akan di inject dgn annotation @Autowired di class yg ingin menggunakan classnya, selain di ProjectManagementApplication.java, kita juga dapat membuatnya di configuration class custom yg bisa dibuat sendiri (di rekomendasikan)
+
+
+Section 6 vid 32
+Annotation @Service gives the spring framework the responsibility of loading this an instance of this class in the spring context
+(percobaannya yaitu, coba kasih debug line dalam class tersebut, lalu debug aplikasinya, ketika class tersebut tidak menggunakan annotation @Service, maka debug itu tidak dijalankan, namun jika menggunakan @Service maka debug itu ter-hit)
+@Component juga sama dgn @Service, lalu ada juga annotation @Repository.
+So the different between them:
+@Repository --> when you're dealing with data
+@Service --> when you're dealing with service
+@Component --> when you're dealing with a particular component or whatever component is really just for, you know. catch all it's a catch all scenario. If you want to create an object that you need in the application, you want it to be added to the context. You don't know what if it's a service or a repository or you don't have any other name for it. You can use the add component annotation to organize your code better.
+
+nah, jadi semua annotation yg ada di dalam package utama project akan ter-scan oleh spring framework dan akan di hold / ditambahkan pada spring context. Lalu bagaimana bila kita ingin agar data di luar package utama juga ikut di scan saat aplikasi starts up?
+kita dapat menggunakan  tambahan parameter di @SpringBootApplication kita di class main kita seperti di bawah:
+@SpringBootApplication(scanBasePackages= {"com.wilson.pma","com.wilson.utils"})
+pada contoh di atas, maka spring akan men-scan package yg ada di com.wilson.pma & com.wilson.utils, di sini sebenarnya kita hanya ingin agar annotation yg berada di luar package project kita (com.wilson.utils) namun demikian kita harus jg meng-include kan termasuk package utama kita. 
+
+
+Section 6 vid 34
+Jika kita mempunyai class yg sama yg meng-implement interface dan ingin di inject, maka ada 2 cara yg dapat digunakan (karena component scanning hanya me-required 1 annotation bean):
+@Primay --> tambahkan annotation ini ke class @Repository yg ingin di inject
+tambahkan @Qualifier ke constructor class tempat dimana akan di inject 
+
+sec 7 vid 36
+cara membuat property di application.properties dynamic dan bisa di set dr luar
+klik kanan di class main utama -> run configuration ->springboot app -> project main -> environtment -> new/add
+
+create environment variable di windows:
+https://www.onmsft.com/how-to/how-to-set-an-environment-variable-in-windows-10 
+
+
+Sec 8 vid 37
+Postgresql
+username(superuser): postgres
+pass: password321
+
+spring.datasource.initialization-mode=never --> by default is set true, it will run an SQL data on our project
+spring.jpa.hibernate.dll-auto=validate --> it would validate that data field on entity class are the same in the table
+
+
+when got error this messages >> the increment size of the sequence is set to 50 in the entity mapping while
+fix with this one
+https://stackoverflow.com/questions/60687826/the-increment-size-of-the-sequence-is-set-to-50-in-the-entity-mapping-while-th
+
+
+
+Sec 9 vid 39
+Right click on ProjectRepositoryIntegrationTest.java then Run as 1 JUnit Test 
+
+
+jadi bikin folder di base project src/test/resources, lalu application-test.properties di move kesana. nantinya ia akan menjadi resource utk development (H2) lalu rename menjadi application.properties.
+Secara general, ketiak aplikasi di jalankan, dia akan menjalankan file application.properties yg ada di  src/test/resources dimana dia meng-override  application.properties yg ada di src/test/java, jika kita ingin agar aplikasi menjalankan application.properties yg di src/test/java, maka rename  application.properties yg ada di src/test/resources
+@DataJpaTest // it is used for, if you have a temporary database that you want to write test case
+
+
+Sec 9 vid 40
+remove @ContextConfiguration dan ganti dengan @SpringBootTest, lalu pada integration src/test/java, package com.wilson.dao rename to com.wilson.pma.dao agar struktur data sama dengan class main
+
+Sec 9 vid 41
+TestRestTemplate --> you can use it to get and retrieve resources like web pages and stuff
+https://spring.io/guides/gs/testing-web/
+
+
+Sec 10 vid 42
+INGAT, settingan server di AWS yg di buat utk demo launch-wizard-1, jika ingin membuat lagi, pakai yg itu juga
+
+wilson-key-pair-course create new key
+
+connect to server: ssh -i "wilson-key-pair-course.pem" ubuntu@3.18.213.255 (jangan lupa jalankan dr dir dimana ssh di local machince
+
+vi .bashrc
+
+mau keluar vim, click esc lalu :wq
+https://stackoverflow.com/questions/11828270/how-do-i-exit-the-vim-editor
+jika berhasil save bashrc file, coba dari command line ketik echo $jdbcurl, $dbuser, $dbpass nanti akan men-print data yg kita edit di bashrc
+
+upload file from local to server:
+in command: >> https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/WSL.html
+scp -i /path/my-key-pair.pem /path/SampleFile.txt my-instance-user-name@my-instance-public-dns-name:/home/ubuntu
+
+install java on server aws
+sudo apt install open
+-11-
+
+remove java from command (WINDOWS 10)
+sudo apt-get remove--auto-remove openjdk* (remove with all dependencies)
+
+install database 
+a) https://tecadmin.net/install-postgresql-server-on-ubuntu/
+b) sudo apt-get install wget ca-certificates
+c) wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+d) sudo apt-get update
+e) sudo apt-get install postgresql postgresql-contrib
+f) sudo -su postgres (change to super user)
+g) createuser --interactive --pwprompt (nanti sesuaikan dgn user di environtment kita (wilsonuser) dan pass juga
+f) createdb -O wilsonuser wilsondatabase (create database)
+g) psql wilsonuser -h 127.0.0.1 -d wilsondatabase (access database)
+h) \l (show database)
+i)  copas dr file schema.sql di project, lalu paste pada command
+j) \dt (show tables)
+k) \d (show not only tables, show sequence if any)
+l) \q (quit database)
+m) exit (exit progres sql)
+
+jalankan kembali aplikasi pada server (dengan berada pada dir dimana key ssh kita)
+scp -i /path/my-key-pair.pem /path/SampleFile.txt my-instance-user-name@my-instance-public-dns-name:/home/ubuntu
+ctrl + c (stop apps pada server)
+
+cara cek domain name yg akan kita coba cek.
+host 3.18.213.255 contoh response yg muncul >> 255.213.18.3.in-addr.arpa domain name pointer ec2-3-18-213-255.us-east-2.compute.amazonaws.com.
+
+lalu copy bagian  ec2-3-18-213-255.us-east-2.compute.amazonaws.com dan paste di browser dengan menambah port 8080 seprti di bawah
+ ec2-3-18-213-255.us-east-2.compute.amazonaws.com:8080
+
+
+Section 10 Vid 43
+Working with Docker to Containerize Your Apps
+
+jadi kita menjalankan image (misal ubuntu) di laptop kita tanpa harus menginstall original ke dalam mesin laptop
+
+Install image on command prompt
+docker pull ubuntu
+(with version)
+docker pull ubuntu:latest
+
+check images on docker
+docker images
+
+launch image (static image)
+docker container run -it ubuntu(*imagename)
+
+update ubuntu and install jdk on image ubuntu:
+apt-get update && apt-get install openjdk-11-jdk
+
+ketik: 
+java -version 
+javac
+
+untuk melihat jdk sudah terinstall
+
+untuk keluar image ubuntu:
+exit
+
+ketika kita keluar dari image ubuntu, lalu masuk lg, lalu ketik javac dan java -version, maka tidak ada,
+so what's then?
+
+ketik utk mengecek images on docker
+run from local (not in images)
+docker container ls -a
+
+
+copy container ID f980de7fe926
+lalu jalankan
+docker container commit -a "Joe Wilson wilsonmangunsong@gmail.com" f98 ubuntu-jdk (dapat menggunakan 3 digit pertama)
+-a = author
+
+Create simple project Java for testing with docker
+click right on java project -> Java -> Runnable JAR File
+
+
+pindahkan file JAR ke dir yg kita buat utk test, masuk ke dir tersebut dengan command
+lalu ketik:
+docker image build -t java-service-from-dockerfile .
+
+run docker that contains our images with java project
+docker container run java-service-from-dockerfile
+
+
+Section 10 vid 44
+- Bikin JAR File pada project kita, utk membuat custom nama jar-nya, bisa kita buat di pom.xml
+<finalName>wilson-app</finalName>
+
+klik kanan pada target folder di project, lalu properties utk ambil alamat dir
+
+lalu buka command prompt dan arahkan ke directory di atas directory target
+
+bikin Dockerfile, lalu jalankan command di bawah ini utk men-transfer project ke images
+docker image build -t wilson-from-dockerfile .
+
+lalu jalankan file
+docker container run wilson-from-dockerfile
+
+namun dengan command di atas, kita tidak  bisa menjalankan project pada browser,
+maka coba jalankan command dibawah ini dengan specific port:
+docker container run -p 8999:8080 wilson-from-dockerfile  (-p port)
+8999 -> local machine., 8080 -> port
+
+run in detache mode
+docker container run -d -p 8999:8080 wilson-from-dockerfile
+dengan begini, maka project kita running tapi tidak menampilkan log running pada command kita
+
+see docker running
+docker container ps
+docker container ls
+
+if you want to see docker container running in the past
+docker container ls -a
+
+if you want to see docker log
+docker container ls
+
+untuk melihat log docker running kita (ini kayak log dari hasil jalanin file)
+docker container logs af3 (3 digit container id app yg ada pada docker ketika running)
+
+remove an old container if we run command: docker container ls -a
+docker start af3a 
+
+stop/kill the container
+docker stop af3
+
+clean all the container junk
+docker container prune
+
+remove image
+docker rmi image 4f5 (3 digit pertama container id)
+
+below the summary of cheatsheet you can use
+***************
+:Cheat Sheet
+# download Images
+docker pull postgres
+
+
+# how to build an image from the directory where Dockerfile exists
+docker image build -t awspma-application .
+
+# list Images
+docker images
+
+# list containers running
+docker container ls
+
+# container is a running instance of an image
+# how to run a container
+docker contaier run ubuntu
+
+# Running container below -d for daemon, -p for port forwarding
+docker run [-d] [-p 5432:5432] postgres:tag
+
+# see logs of a running container
+docker container logs <container id>
+# list the containers that are running?
+docker container ls
+
+# list all stopped and running containers
+docker container ls -a
+
+# delete container
+docker container rm <Container Id> or <name>
+
+# How to stop a container?
+docker stop <ID>
+
+# remove docker image.. This requires first removing all stopped containers of this image
+docker rmi image <image name>
+
+# Create an image from a container that was previously run.
+docker container commit -a "Imtiaz Ahmad imtiaz@jobreadyprogrammer.com" <ID of Container> <image name>
+
+# clear away all stopped containers
+docker container prune
+
+***************
+
+Section 10 vid 45
+Download image locally from docker offiicial website
+
+build the application (make jar), right click on pom.xlm > run as > maven install
+
+VPC = Virtual Private Cloud (AWS)
+
+create VPC and Subnet (on AWS)
+- Launch VPC Wizards first (create VPC, choose VPC only)
+- create subnet and associated its subnet to PVC that we created before (with region us-east-1a) 10.0.0.0/24
+- again, create subnet and associated its subnet to PVC that we created before (with region us-east-1e) 10.0.1.0/24
+
+
+after all cleared, go to services -> database -> RDS
+
+kalau keluar error "the specified vpc has no internet gateway attached. update the vpc and then try again" waktu mau bikin database,
+create Internet gateway dulu yg nantinya di attach ke vpc yang tersambung ke database tersebut utk menghubungkan vpc ke internet
+https://docs.axway.com/bundle/SecureTransport_54_on_AWS_InstallationGuide_allOS_en_HTML5/page/Content/AWS/securitygroups/st_gateway_subnet_routing.htm
+
+if can't connect to server aws from postgres in local machine, follow this step
+https://www.udemy.com/course/spring-framework-web-development-2020/learn/lecture/16740428#questions/16118926
+
+ketika database yg terkoneksi dgn virtual private cloud (vpc) aws, coba jalankan query menggunakan file sql yg ada pada project (schema.sql)
+
+Section 10 vid46
+Dockerfile
+ENV jdbcurl=jdbc:driver://hostname:port/dbName --> template for key jdbc
+contoh valuenya ketika kita menggunakan cloud amazon menjadi = jdbc:postgresql://wilsondatabaseaws.cpv4vcfh7v1g.us-east-1.rds.amazonaws.com:5432/postgres --> postgres adl nama database default ketika kita tidak memberikan input utk value nama database ketika membuat database di AWS
+
+create image for database:
+docker image build -t awswilson-application .
+
+run the image that we are created
+docker run -p 8080:8080 awswilson-application
+
+lalu buka http://localhost:8080/ pada browser, maka kita menjalankan aplikasi dr image awswilson-application
+
+Section 11 vid47
+Ganti repository di Controller Employee dan Project menjadi Service
+
+Section 11 vid48
+Working with Spring Profile
+coba run aplikasi  saat application.properties masih menggunakan key ${jdbcurl}
+maka akan error, namun fokuskan pada log ketika running, log di baris 2, akan menginfokan: No active profile set...
+
+
+Jika kita ingin menjalankan spesifik repository hanya jalan pada mode profile tertentu misalnya dev dengan menggunakan class yg dimana class tersebut meng-implement interface yg kita gunakan pada production (jadi dengan ini, kita tidak perlu men-duplicate interface lalu memasukkannya di koding kita, dan malah akan membuat koding jadi berantakan), kita bisa menambahkan annotation @Repository & @Profiles("dev") pada class tersebut. Pada latihan ini, kita membuat class EmployeeRepository2.java yg dimana mengimplement interface EmployeeRepository. 
+
+Section 11 vid49
+AOP = Aspect Oriented Programming
+
+@Pointcut("within(com.wilson.pma.controllers..*) || within(com.wilson.pma.dao..*)") --> akan di pasang pada method yg mana nanti akan di panggil dari method lain yg menggunakan annotation @After()
+within(com.wilson.pma.controllers..*) artinya nanti log akan di jalankan di setiap method yg ada pada pma.controllers
+within(com.wilson.pma.dao..*) artinya nanti log akan di jalankan di setiap method yg ada pada pma.dao
+
+method yg memiliki annotation @After() akan berjalan di setiap baris kode yg ada pada paket yg di define pada @Pointcut() 
+
+ @After() dan @Before() ini bisa juga disebut advice dalam AOP (Aspect Oriented Programming) land 
+
+
+Section vid50
+A Joint Point is basically a point during the execution of your program
+Join Point object gives us the ability to access points during the execution of your program. Jadi intinya, join point akan memberikan akses kepada kita utk mengakses apapun yg ada dalam method / fungsi yg sedang berjalan, misalnya argumen, variable dll yg ada dalam proses tersebut. Sehingga kita dapat membuat log dari sana
+
+Sample log with advice before
+2022-05-22 00:47:27.756[0;39m [32mDEBUG[0;39m [35m13072[0;39m [2m---[0;39m [2m[nio-8080-exec-2][0;39m [36mc.w.pma.logging.ApplicationLoggerAspect [0;39m [2m:[0;39m ************* Before Method Execution *************** 
+ com.wilson.pma.controllers.HomeController...displayHome () with arguments[s] = [{}]
+[2m2022-05-22 00:47:27.757[0;39m [32mDEBUG[0;39m [35m13072[0;39m [2m---[0;39m [2m[nio-8080-exec-2][0;39m [36mc.w.pma.logging.ApplicationLoggerAspect [0;39m [2m:[0;39m _________________________________________________ 
+ 
+Advice @Around adalah advice gabungan dari @After dan @Before advice
+
+
+Section 11 vid51
+# WARN, level of the higher logging
+logging.level.root = WARN
+logging.level.com.wilson.pma = DEBUG
+logging.level.org.springframework=INFO
+# Level of logging from Higher to Lower = WARN, ERROR, INFO, DEBUG, TRACE
+
+
+Section 12 vid52
+Spring Security Pt1: Basic In-Memory Authentication
+
+> right click on pom.xml > spring > add starters > (search) spring security > next > added 2 dependencies > finish 
+
+after added those dependencies, run the app, notice that you can see a line that has written on console "Using generated security password....."
+
+and then, after that, open the project on your browser localhost:3000, then it should be appeared a login page.
+So you  can login with:
+username: user
+password: copy from console on project running
+log out by default just added logout = localhost:3000/logout
+
+we can multiply a user with and()
+
+
+Section 12 vid53
+Spring Security Pt2: Basic In-Memory Authentication
+Create method authorized to give access to do the task
+
+ketika sebuah endpoint diberikan authorized ROLE kepada user tertentu, maka ketika user yg tidak memiliki ROLE tidak akan
+bisa mengakses/melakukan proses ke endpoint tersebut
+
+Section 12 Vid54
+JDBC Backed Security
+
+Make sure in the pom.xlm you already has dependencies of JDBC, if not, add them by right click on pom.xml > add starters > JDBC API
+
+so, when we are using JDBC as our configure authentication, the spring will run this >>
+https://docs.spring.io/spring-security/site/docs/3.0.x/reference/appendix-schema.html
+to create USERS and AUTHORITIES table on our H2 Database

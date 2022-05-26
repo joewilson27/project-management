@@ -1,5 +1,8 @@
 package com.wilson.pma.security;
 
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -13,8 +16,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity // there a kinds of security, but we are dealing with web security in this lecture
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	
+	@Autowired
+	DataSource dataSource;
+	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		
+		/*
+		// using in-memory
 		// we are here using in-memory authentication to the project, there many various authentication
 		// jika skrg jalankan app dan buka localhost, ketika login menggunakan myuser dan password di bawah
 		// tidak bisa, karena spring tidak mau ada authentication yg terbuka pada source
@@ -30,7 +39,37 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.withUser("manageUser")
 					.password("pass3")
 					.roles("ADMIN");
+		*/
 		
+		/*
+		// using jdbc with Default Schema
+		auth.jdbcAuthentication().dataSource(dataSource)
+			.withDefaultSchema() // LOOK AT THIS
+			.withUser("myuser")
+				.password("pass")
+				.roles("USER")
+				.and() 
+				.withUser("joe")
+					.password("pass2")
+					.roles("USER")
+				.and()
+				.withUser("manageUser")
+					.password("pass3")
+					.roles("ADMIN");
+		*/
+		
+		// Using JDBC with customize schema using query
+		auth.jdbcAuthentication().dataSource(dataSource)
+			.usersByUsernameQuery("select username, password, enabled "
+					+ "from users where username = ?" ) // look up for the username
+			.authoritiesByUsernameQuery("select username, authority "
+					+ "from authorities where username = ?"); // look up for the authority
+		
+		// so with this configure using jdbc, when you run the apps, then you can see
+		// the table USERS has created with these following users above (myuser, joe, manageUser)
+		// on jdbc h2 http://localhost:8080/h2-console
+		// also you can see an AUTHORITIES table that contains the authority of the users
+		// the documentation >> https://docs.spring.io/spring-security/site/docs/3.0.x/reference/appendix-schema.html
 	}
 	
 	@Bean
@@ -47,9 +86,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		http.authorizeHttpRequests()
 			.antMatchers("/projects/new").hasRole("ADMIN") // only user that has role ADMIN could create project
 			.antMatchers("/employees/new").hasRole("ADMIN")
+			// using this method if using jdbc
+			.antMatchers("/h2_console/**").permitAll()
 			.antMatchers("/").authenticated().and().formLogin(); // all users can access to the endpoint "/" if they're authenticated
 		// ketika user yg tidak mempunyai ROLE ADMIN mencoba akses ke endpoint "/project/new"
 		// maka aplikasi akan menolak
+		
+		// disable this if using jdbc
+		http.csrf().disable();
+		http.headers().frameOptions().disable();
+		
+		
 	}
 	
 }
