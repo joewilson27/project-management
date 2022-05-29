@@ -58,7 +58,7 @@ public class EmployeeController {
 		empService.save(employee);
 		
 		// this is an url redirect, not a template view
-		return "redirect:/employees/new";// best practice, if you save your data, better to redirect to prevent a double submissions (submit berkali-kali)
+		return "redirect:/employees";// best practice, if you save your data, better to redirect to prevent a double submissions (submit berkali-kali)
 	}
 	
 	@GetMapping("/update")

@@ -102,10 +102,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception{
 		http.authorizeHttpRequests()
-			.antMatchers("/projects/new").hasRole("ADMIN") // only user that has role ADMIN could create project
+			.antMatchers("/projects/new").hasRole("ADMIN") // only user that has role ROLE_ADMIN could create project
 			.antMatchers("/projects/save").hasRole("ADMIN")
-			.antMatchers("/employees/new").hasRole("ADMIN")
-			.antMatchers("/employees/save").hasRole("ADMIN")
+			.antMatchers("/employees/new").hasRole("ADMIN") //hasAuthority("ADMIN") // user yg bisa mengakses, adl user yg memiliki value ADMIN pada kolom role pd table user_accounts
+			.antMatchers("/employees/save").hasRole("ADMIN") //hasAuthority("ADMIN") // user yg bisa mengakses, adl user yg memiliki value ADMIN pada kolom role pd table user_accounts
 			// using this method if using jdbc
 			//.antMatchers("/h2_console/**").permitAll()
 //			.antMatchers("/").authenticated().and().formLogin(); // all users can access to the endpoint "/" if they're authenticated
