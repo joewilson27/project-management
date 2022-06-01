@@ -111,6 +111,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 //			.antMatchers("/").authenticated().and().formLogin(); // all users can access to the endpoint "/" if they're authenticated
 			.antMatchers("/", "/**").permitAll() // urutan ini berpengaruh pada akses aplikasi, jika kita menaruh baris ini paling atas, karena di baris ini kita menggunakan "/**" yakni semua url/akses, maka rule berikutnya jadi tidak berguna
 			.and()
+			.csrf().ignoringAntMatchers("/app-api/employees/**") // utk api agar tidak kena csrf
+			.and()
 			.formLogin();
 			// ketika user yg tidak mempunyai ROLE ADMIN mencoba akses ke endpoint "/project/new"
 		// maka aplikasi akan menolak

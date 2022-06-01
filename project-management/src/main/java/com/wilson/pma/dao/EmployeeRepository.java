@@ -14,8 +14,8 @@ import com.wilson.pma.entities.Employee;
 //@Profile("prod") // interface ini akan run on profile prod
 public interface EmployeeRepository extends CrudRepository<Employee, Long> { // Long is data type of primary key entity Employee
 	
-	@Override
-	public List<Employee> findAll();
+//	@Override // using findAll from CrudRepository
+//	public List<Employee> findAll();
 	
 	@Query(nativeQuery=true, value="SELECT e.first_name as firstName, e.last_name as lastName, COUNT(pe.employee_id) as projectCount "
 			+ "FROM employee e LEFT JOIN project_employee pe ON pe.employee_id = e.employee_id "

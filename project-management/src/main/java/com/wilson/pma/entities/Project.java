@@ -13,6 +13,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.JoinColumn;
 
 @Entity // an entity annotation is a mark that could tell the java that this class is an entity
@@ -51,6 +54,7 @@ public class Project {
 			   joinColumns=@JoinColumn(name="project_id"),
 			   inverseJoinColumns=@JoinColumn(name="employee_id")
 	)
+	@JsonIgnore
 	private List<Employee> employees; // many projects could be associated to one employee, satu employee dapat terhubung ke banyak project
 	// nama table dr table mapping yg akan tercreate nanti adl table 'project_employee'
 	// dan foreign key dr table project ke table project_employee adl 'project_id'
