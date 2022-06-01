@@ -2,6 +2,8 @@ package com.wilson.pma.api.controllers;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -36,9 +38,10 @@ public class EmployeeApiController {
 		return empRepo.findById(id).get();
 	}
 	
+	// @Valid is for validating a request data from user
 	@PostMapping(consumes = "application/json") // type request yg di get dari executor
 	@ResponseStatus(HttpStatus.CREATED) // response to be get by the executor
-	public Employee create(@RequestBody Employee employee) {
+	public Employee create(@RequestBody @Valid Employee employee) {
 		return empRepo.save(employee);
 	}
 	
@@ -48,7 +51,7 @@ public class EmployeeApiController {
 	//
 	@PutMapping(consumes = "application/json")
 	@ResponseStatus(HttpStatus.OK)
-	public Employee update(@RequestBody Employee employee) {
+	public Employee update(@RequestBody @Valid Employee employee) {
 		return empRepo.save(employee); 
 	}
 	
@@ -57,7 +60,7 @@ public class EmployeeApiController {
 	// will not delete data from project_employee, because its updated only for firstName, lastName and email only
 	//
 	@PatchMapping(path="/{id}", consumes="application/json")
-	public Employee partialUpdate(@PathVariable("id") long id, @RequestBody Employee patchEmployee) {
+	public Employee partialUpdate(@PathVariable("id") long id, @RequestBody @Valid Employee patchEmployee) {
 		Employee emp = empRepo.findById(id).get();
 		
 		if (patchEmployee.getEmail() != null) {
