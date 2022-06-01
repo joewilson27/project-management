@@ -113,6 +113,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 			.and()
 			.csrf().ignoringAntMatchers("/app-api/employees/**") // utk api agar tidak kena csrf
 			.and()
+			.csrf().ignoringAntMatchers("/app-api/projects/**")
+			.and()
 			.formLogin();
 			// ketika user yg tidak mempunyai ROLE ADMIN mencoba akses ke endpoint "/project/new"
 		// maka aplikasi akan menolak
