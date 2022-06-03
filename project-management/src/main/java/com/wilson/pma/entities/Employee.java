@@ -20,6 +20,7 @@ import javax.validation.constraints.Size;
 import javax.validation.constraints.Email;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.wilson.pma.validators.UniqueValue;
 
 @Entity
 public class Employee {
@@ -41,7 +42,10 @@ public class Employee {
 	
 	@NotNull
 	@Email
-	@Column(unique = true) // it means that email is unique on table, kalo mau dari column utk validasi not null tinggal tambah param nullable = false
+	//@Column(unique = true) // it means that email is unique on table, kalo mau dari column utk validasi not null tinggal tambah param nullable = false
+	// we commented out @Column above, because our setting ddl in dev properties 
+	// we set ddl to none, so this annotation does nothing.
+	@UniqueValue // this is an annotation custom @UniqueValue 
 	private String email;
 	
 	// this for mapped an employee to a project when we define mappedBy in Project

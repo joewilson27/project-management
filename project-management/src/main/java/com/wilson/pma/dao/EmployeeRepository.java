@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import com.wilson.pma.dto.EmployeeProject;
@@ -12,8 +13,9 @@ import com.wilson.pma.entities.Employee;
 
 //@Repository
 //@Profile("prod") // interface ini akan run on profile prod
-public interface EmployeeRepository extends CrudRepository<Employee, Long> { // Long is data type of primary key entity Employee
-	
+//public interface EmployeeRepository extends CrudRepository<Employee, Long> { // Long is data type of primary key entity Employee
+
+public interface EmployeeRepository extends PagingAndSortingRepository<Employee, Long> {	
 //	@Override // using findAll from CrudRepository
 //	public List<Employee> findAll();
 	
@@ -22,8 +24,8 @@ public interface EmployeeRepository extends CrudRepository<Employee, Long> { // 
 			+ "GROUP BY e.first_name, e.last_name ORDER BY 3 DESC")
 	public List<EmployeeProject> employeeProjects();
 	
-	public Employee findByEmail(String value);
+	public Employee findByEmail(String value); // spring knows we want to find data by Email
 	
-	public Employee findByEmployeeId(long theId);
+	public Employee findByEmployeeId(long theId); // spring knows we want to find data by EmployeeId
 	
 }
