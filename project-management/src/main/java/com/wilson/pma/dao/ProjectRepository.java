@@ -4,13 +4,14 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
 import com.wilson.pma.dto.ChartData;
 import com.wilson.pma.dto.TimeChartData;
 import com.wilson.pma.entities.Project;
 
 // dao -> data access object
-public interface ProjectRepository extends CrudRepository<Project, Long> {
+public interface ProjectRepository extends PagingAndSortingRepository<Project, Long> {
 	// CrudRepository<Project, Long> first argument is object entity, second argument is data type of an unique id entity
 	
 	// karena kita ingin membuat type List di HomeController dengan instance dr interface ini

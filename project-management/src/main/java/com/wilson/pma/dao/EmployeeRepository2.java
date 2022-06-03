@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 import com.wilson.pma.dto.EmployeeProject;
@@ -131,6 +134,18 @@ public class EmployeeRepository2 implements EmployeeRepository {
 
 	@Override
 	public Employee findByEmployeeId(long theId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Iterable<Employee> findAll(Sort sort) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Page<Employee> findAll(Pageable pageable) {
 		// TODO Auto-generated method stub
 		return null;
 	}
