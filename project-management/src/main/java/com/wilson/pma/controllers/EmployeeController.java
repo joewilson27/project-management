@@ -15,7 +15,11 @@ import com.wilson.pma.entities.Employee;
 import com.wilson.pma.services.EmployeeService;
 
 @Controller
-@RequestMapping("/employees")
+@RequestMapping("/employees") // kita ubah endpointnya agar ke trigger endpoint rest, karena by default, @RequestMapping akan menjalankan normal endpoint yg dimana akan menuju halaman employee ketika 
+// alamat ini di hit, 
+// karena jika  Rest Repositories ini kita enabling, maka yg terjadi
+// si Rest Repo ini pada background sudah membentuk endpoint secara otomatis pada dari controller utama kita,
+// maka controller utama ini kita ganti agar dia menjalankan rest
 public class EmployeeController {
 	
 	@Autowired // remove this Autowired for test

@@ -1,5 +1,7 @@
 package com.wilson.pma.security;
 
+import java.util.Arrays;
+
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration // by adding this, it would be added to Spring Context (you know what a spring context is)
 @EnableWebSecurity // there a kinds of security, but we are dealing with web security in this lecture
@@ -100,7 +105,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	// this method will give the authorization to take activity over our websites,
 	// only an authorized user can do the task
 	@Override
-	protected void configure(HttpSecurity http) throws Exception{
+	protected void configure(HttpSecurity http) throws Exception {
+		
+		
 		http.authorizeHttpRequests()
 			.antMatchers("/projects/new").hasRole("ADMIN") // only user that has role ROLE_ADMIN could create project
 			.antMatchers("/projects/save").hasRole("ADMIN")
@@ -124,6 +131,25 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 //		http.headers().frameOptions().disable();
 		
 		
+		// use this for Rest Repositories API to handling 403 forbidden when requested to the endpoint
+		//http.cors().and().csrf().disable();
+		
 	}
+	
+	/*
+	// for additional code to disable cors when hit API through Rest Repo Spring
+	@Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedMethods(Arrays.asList("*"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+	*/
+	
 	
 }
