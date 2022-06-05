@@ -18,6 +18,7 @@ import javax.persistence.SequenceGenerator;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wilson.pma.validators.UniqueValue;
@@ -32,16 +33,19 @@ public class Employee {
 	@SequenceGenerator(name = "employee_generator", sequenceName = "employee_seq", allocationSize = 1) // got error before this, so I added this @SequenceGenerator
 	private long employeeId;
 	
-	@NotNull
+	//@NotNull
+	@NotBlank(message="*Must give a first name") // validating on input space 
 	@Size(min=2, max=50) 
 	private String firstName;
 	
-	@NotNull
+	//@NotNull
+	@NotBlank(message="*Must give a last name") // if we didn't put param message, the input field would create the default alert error
 	@Size(min=1, max=50) 
 	private String lastName;
 	
-	@NotNull
-	@Email
+	//@NotNull
+	@NotBlank
+	@Email(message="*Must be a valid email address")
 	//@Column(unique = true) // it means that email is unique on table, kalo mau dari column utk validasi not null tinggal tambah param nullable = false
 	// we commented out @Column above, because our setting ddl in dev properties 
 	// we set ddl to none, so this annotation does nothing.
