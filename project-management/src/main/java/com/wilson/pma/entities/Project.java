@@ -1,6 +1,7 @@
 package com.wilson.pma.entities;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -13,6 +14,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
+import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -32,6 +34,12 @@ public class Project {
 	private String stage; // NOTSTARTED, COMPLETED, INPROGRESS
 	
 	private String description;
+	
+	@NotBlank(message="date cannot be empty")
+	private Date startDate;
+	
+	@NotBlank(message="date cannot be empty")
+	private Date endDate;
 	
 	// one (project) to (assign employee) many
 	// One project could be assigned to many employees
@@ -117,6 +125,22 @@ public class Project {
 			employees = new ArrayList<>();
 		}
 		employees.add(emp);
+	}
+
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
 	}	
 	
 }
