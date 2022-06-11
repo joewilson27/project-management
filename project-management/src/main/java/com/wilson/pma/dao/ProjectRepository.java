@@ -25,6 +25,7 @@ public interface ProjectRepository extends PagingAndSortingRepository<Project, L
 			+ "GROUP BY stage")
 	public List<ChartData> getProjectStatus();
 	
+	// pastikan datanya kita samakan dengan define variable pada entity Project -> projectName, startDate, endDate
 	@Query(nativeQuery=true, value="SELECT name as projectName, start_date as startDate, end_date as endDate"
 			+ " FROM project WHERE start_date is not null")
 	public List<TimeChartData> getTimeData();

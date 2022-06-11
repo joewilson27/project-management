@@ -95,8 +95,9 @@ public class ProjectController {
 		String jsonTimelineString = objectMapper.writeValueAsString(timelineData);
 
 		System.out.println("---------- project timelines ----------");
-		System.out.println(jsonTimelineString);
+		System.out.println(jsonTimelineString); // -> will produce projectName, startDate, endDate
 		
+		// projectTimeList yg akan di tangkap pada view html
 		model.addAttribute("projectTimeList", jsonTimelineString);
 		
 		return "projects/project-timelines";
